@@ -1,0 +1,110 @@
+Task 1: Instructions
+Read in the data consisting of 49999 New York taxi journeys.
+
+Load in the tidyverse package (which includes dplyr and ggplot2).
+Read in the datasets/taxi.csv file using the read_csv() function (not read.csv()) and store the resulting data frame into taxi.
+Take a look at the first couple of rows in taxi by using the head() function.
+Good to know
+This Project assumes you have used the dplyr and ggplot2 packages and that you are familiar with the pipe operator (%>%). Before taking on this Project, we recommend that you have completed the course Introduction to the Tidyverse.
+
+RStudio has created some very helpful cheat sheets, including two that will be helpful for this Project: Data Wrangling and Data Visualization with ggplot2. We recommend that you keep them open in a separate tab to make it easy to refer to them.
+
+Task 2: Instructions
+Rename, cleanup and add a new variable to the taxi dataset. All this as part of a single %>%-pipeline.
+
+rename the columns pickup_latitude and pickup_longitude into the shorter lat and long.
+filter so to keep only those rows where fare_amount or tip_amountis larger than zero (> 0).
+Finally, mutate taxi to include a new column called total calculated as the log() of fare_amount + tip_amount.
+The reason to define total as the the log() of fare_amount + tip_amount is that by taking the log we remedy the effect of outliers by making really large numbers smaller.
+
+
+Task 3: Instructions
+Filter the data (taxi) down to a rectangle containing Manhattan.
+
+filter taxi so that you keep only those rows in where lat is between 40.70 and 40.83, and long is between -74.025 and -73.93.
+Assign the result back to taxi.
+dplyr contains a function called between which can simplify the code for this task. For how to use between with filter check out this stack overflow answer.
+
+
+Task 4: Instructions
+Draw a map of Manhattan with a summary of the number of journeys on top.
+
+Load in the ggmap package and the viridis package (which includes a nice color scale).
+Complete the ggmap call by adding (+) a geom_bin2d layer with data = taxi, long on the x-axis and lat on the y-axis, bins = 60, and alpha = 0.6.
+Add (+) labels using the labs command for the x, y and fill dimensions.
+For the syntax of geom_bin2d, and for examples of usage, check out the official ggplot2 documentation.
+
+Task 5: Instructions
+Fit and visualize a regression tree to predict total using lat and long.
+
+Load in the tree package.
+Use the tree() function to fit a regression tree with total as the outcome and lat and long as the predictors. Assign the result to fitted_tree.
+Visualize fitted_tree by using the plot() and text() functions.
+tree() takes a formula (outcome ~ predictor1 + predictor2 + ...) as it's first argument and the data frame as the second. For more information see the documentation of the tree function. If fitted_tree is the output of tree then
+
+plot(fitted_tree)
+text(fitted_tree)
+draws the tree.
+
+
+Task 6: Instructions
+Use the pickup_datetime column to add the hour, weekday, and month each trip was made.
+
+Load in the lubridate package.
+mutate the taxi dataset to include the new columns hour, wday, and month. Each new column should be created from the pickup_datetime using either of the functions hour(), wday(), and month().
+Make sure to set the argument label = TRUE when using wday() and month().
+taxi$pickup_datetime describes when each taxi trip was started and lubridate includes many functions, like hour(), which extract information from a datetime object. See the documentation for lubridate.
+
+
+Task 7: Instructions
+Fit a new regression tree that also includes hour, wday, and month.
+
+Like before, fit a regression tree using tree() and assign the result to fitted_tree. But this time include both lat, long, hour, wday, and month as predictors.
+Visualize the resulting fitted_tree using plot() and text().
+Print a text summary of fitted_tree by using the summary() function.
+
+
+Task 8: Instructions
+Instead of fitting a regression tree to the data, let's fit a random forest instead.
+
+Load in the randomForest package.
+Use the randomForest() function to fit at random forest with the same predictors as the for tree in the last task. Assign the result to fitted_forest.
+Set the following arguments to randomForest() to speed up the computation: ntree = 80 and sampsize = 10000
+Print fitted_forest to show a summary of the result.
+randomForest() uses the same basic syntax as the tree() function. That is, the first argument is a formula and the second argument is the data.
+
+
+Task 9: Instructions
+Extract and plot the prediction of the fitted random forest.
+
+fitted_forest$predicted contains the predictions for the datapoints in taxi. Assign fitted_forest$predicted to taxi$pred_total.
+Copy in the plotting code from task 4.
+Replace geom_bin2d by stat_summary_2d but keep the arguments. Add z = pred_total to the aes call and fun = mean as an argument.
+Change fill label to something suitable.
+stat_summary_2d is similar to geom_bin2d but takes the data connected to z and applies a function to it defined by the fun = argument. See the documentation for stat_summary_2d.
+
+
+Task 10: Instructions
+Plot the mean fare of the fitted random forest.
+
+Copy in the plotting code from the previous task.
+Change z = pred_total to z = total.
+Change fun = mean to use the defined function, that is, into fun = mean_if_enough_data.
+You could use fun = mean for this plot, but that will leave a lot of squares with just a few data points which will be visually distracting. Therefore you'll use mean_if_enough_data instead which only returns the mean if there are 15 or more datapoints.
+
+
+Task 11: Instructions
+Given the data and our model, where do people spend the most on taxi trips?
+
+Change the value of spends_most_on_trips to reflect where people spend the most on taxi trips. "uptown" or "downtown"?
+Hint: Downtown is the lower tip of Manhattan while uptown refers to the upper half of Manhattan.
+
+If you want to know more
+Regression trees and random forests are covered in the DataCamp course Supervised Learning In R: Regression.
+
+Read more about the ggmap package here.
+
+
+
+
+
